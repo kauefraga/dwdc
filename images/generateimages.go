@@ -8,9 +8,18 @@ import (
 	"path/filepath"
 
 	"github.com/fogleman/gg"
+	"github.com/kauefraga/dwdc/settings"
+	"github.com/kauefraga/dwdc/templates"
 )
 
-func GenerateImagesFromText(text string) {
+func GenerateImagesFromSettings(s *settings.Settings) {
+	text := s.Text
+
+	if text == "" {
+		// TODO check for the set template name, maybe using an array literal (e.g. `templates.weekdaysInPortuguese`)
+		text = templates.GetDayOfWeek()
+	}
+
 	characters := []rune(text)
 	desktopPath := getUserDesktopDirectoryPath()
 
@@ -22,21 +31,32 @@ func GenerateImagesFromText(text string) {
 
 		img := image.NewRGBA(image.Rect(0, 0, width, height))
 
-		cyan := color.RGBA{100, 200, 200, 0xff}
+		bg := color.RGBA{
+			R: s.BackgroundColor[0],
+			G: s.BackgroundColor[1],
+			B: s.BackgroundColor[2],
+			A: s.BackgroundColor[3],
+		}
+		fg := color.RGBA{
+			R: s.Color[0],
+			G: s.Color[1],
+			B: s.Color[2],
+			A: s.Color[3],
+		}
 
 		for x := range width {
 			for y := range height {
-				img.Set(x, y, cyan)
+				img.Set(x, y, bg)
 			}
 		}
 
 		dc := gg.NewContextForRGBA(img)
 
-		if err := dc.LoadFontFace("dmserifdisplay.ttf", 300); err != nil {
+		if err := dc.LoadFontFace(s.FontFamily, 300); err != nil {
 			log.Fatal("failed to load font")
 		}
 
-		dc.SetColor(color.Black)
+		dc.SetColor(fg)
 		dc.DrawStringAnchored(charString, float64(dc.Width())/2, float64(dc.Height())/2, 0.5, 0.5)
 
 		outputPath := filepath.Join(desktopPath, "dwdc-"+fmt.Sprint(i)+".png")
