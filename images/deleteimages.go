@@ -5,7 +5,8 @@ import (
 	"os"
 )
 
-func DeleteDwdcImages() {
+// search for dwdc images ("dwdc-1.png", ...) in user's desktop area and delete them
+func deleteDwdcImages() {
 	dwdcImages := getDwdcImagesPath()
 
 	for _, imagePath := range dwdcImages {

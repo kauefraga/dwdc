@@ -4,7 +4,7 @@
 
 ![Demonstration of dwdc showing "Sábado" (Saturday in pt-br) with each letter in a separate image, each image with a cyan background and black foreground](docs/dwdc-demo.png)
 
-![Above image, but with a closer look](docs/dwdc-demo-close.png)
+![Demonstration of dwdc background generation. The text "Just use Go" with a cyan background and white foreground](docs/dwdc-bg-demo.png)
 
 ## Features
 
@@ -13,12 +13,12 @@ dwdc aims to just **generate images that form some text**.
 - Want to set font family, background and foreground colors? Possible
 - Want some aesthetic static phrase? Possible
 - Want some dynamic text? Possible but limited, [see at the bottom of this section](#settings)
-- Want a single big picture of some cool text? Possible soon
+- Want a single big picture of some cool text? Possible
 
-The idea is to make the binary `dwdc` generates images when invoked without arguments, and also let user defines the settings through a CLI (`dwdc [...]`). 
+The idea is to make the binary `dwdc` generates images when invoked without arguments, and also let user defines the settings through a CLI (`dwdc [...]`). NOT POSSIBLE YET.
 
 > [!IMPORTANT]
-> A pitfall that I came across is that the generated images cannot be positioned horizontally (like letters in a word) by dwdc, therefore it's user's job to fix them. The good side is that once in the right place the next generated images will be in the right spot too. This take is true for Windows 10 (it may not in other OS), and for images with the same name.
+> A pitfall that I came across is that the generated images cannot be positioned horizontally (like letters in a word) by dwdc, therefore it's user's job to fix them. The good side is that once in the right place the next generated images will be in the right spot too. This take is true for Windows 10 (it may not in other OS), and for images with the same name, so don't change the images' name,
 
 ## Installation
 
@@ -40,7 +40,7 @@ After [installation](#installation), the default settings is going to
 - Look for `dwdc-*.png` images in your desktop area
 - Remove them
 - Get current day of the week in Brazilian Portuguese (e.g. Sunday -> Domingo)
-- Generate 7 images in your desktop area, each containing a letter of "Domingo"
+- Generate 7 images (if "Domingo") in your desktop area, each containing a letter of "Domingo"
 ```
 
 That's why `dwdc` was made for, originally.
@@ -69,29 +69,43 @@ Yes, it looks like CSS properties. The colors are in the [RGBA format](https://r
 ```toml
 # [array of 4 uint8 (0 to 255)]
 # Color used to fill the background of each image
-BackgroundColor = [255, 255, 255, 255]
+BackgroundColor = [100, 200, 200, 255]
 
 # [array of 4 uint8 (0 to 255)]
 # Color used to fill the foreground/characters
 Color = [0, 0, 0, 0]
 
 # [string]
-# Path to font file relative to dwdc binary 
-FontFamily = "dmserifdisplay.ttf"
+# Pattern used to generate the image
+# static templates available: text, backgroundimage
+# Dynamic templates available: dayoftheweek (dynamic) (unavailable but planned: today's weather, day of the month, someone's github commit count)
+Template = "dayoftheweek"
 
 # [string]
-# Static text to be generated 
+# Static text to be displayed
 Text = ""
 
 # [string]
-# Dynamic pattern to choose the text to be generated
-# e.g. day of the week, today's weather, day of the month, someone's github commit count...
-Template = ""
+# Text position is used when the "backgroundimage" template is set to define where the text will be
+# positions available: topleft, topcenter, topright, centerleft, center, centerright, bottomleft, bottomcenter, bottomright
+TextPosition = "center"
+
+# [string]
+# Path to font file relative to dwdc binary 
+FontFamily = "dmserifdisplay.ttf"
+
+# [uint]
+# Text setting font size
+FontSize = 250
 ```
 
-You should choose between defining `Text` or `Template`, but if you define both, `Text` takes preference.
+#### Make it really dynamic
 
-The only template that's available is `Template = "dayoftheweek"`. The same used if you just omit `Text` and `Template` settings.
+Create a basic task in Windows Task Scheduler to start dwdc everytime your computer boots up. This way, it will remain synchronized with the current day. 
+
+#### Examples
+
+Soon.
 
 ## History
 
@@ -99,7 +113,7 @@ I was wondering if I can make something like the rainmeter (image below) myself,
 
 ![Demonstration of widgets with rainmeter](docs/rainmeter-demo.png)
 
-Choose Go because it easily compiles to a binary that I can set to be a startup app, then it would run everytime I turn on my computer.
+Choose Go because it easily compiles to a binary that I can set to be a startup app, then it would run everytime I turn on my computer, keeping the current day in sync.
 
 ## License
 
